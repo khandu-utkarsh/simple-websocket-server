@@ -1,72 +1,92 @@
-var socket;
+// import { startChatting } from "chatModule.js";
 
-(function(window, document, undefined){
-    "use strict";
-    var host = document.location.hostname;
-    var port = document.location.port;
+"use strict";
+const host = document.location.hostname;
+const port = document.location.port;
 
-    function start_chatting(e) {
-        e.preventDefault();
-        var username = document.getElementById('username').value;
-        var connect_form = document.getElementById('connect-form');
-        var chat_app = document.getElementById('chat-app');
+let socket;
 
-        connect_form.style.display = 'none';
+function startChatting(e) {
+  e.preventDefault();
+  const username = document.getElementById("username").value;
+  const connectForm = document.getElementById("connect-form");
+  const chatApp = document.getElementById("chat-app");
 
-        var status = document.getElementById('status');
-        var chats = document.getElementById('chats');
+  connectForm.style.display = "none";
 
-        status.innerHTML = 'Connecting...';
-        status.className = 'connecting';
+  const status = document.getElementById("status");
+  const chats = document.getElementById("chats");
 
-        socket = new WebSocket('ws://' + host + ':' + port + '/');
+  status.innerHTML = "Connecting...";
+  status.className = "connecting";
 
-        socket.onopen = function () {
-            status.innerHTML = 'Connected';
-            status.className = 'connected';
-            chat_app.style.display = 'block';
-            send_message({
-                type: 'new_user',
-                username: username
-            });
-        };
+  socket = new WebSocket("ws://127.0.0.1:8000");
 
-        socket.onmessage = function (response) {
-            var tr = document.createElement('tr');
-            var data = JSON.parse(response.data);
-            console.log(data);
-            if(data.type === 'notice') {
-                data.username = '*Server Message*'
-            }
-            tr.innerHTML = '<td>[$1]</td><td>$2</td><td>$3</td>'
-                .replace('$1', data.datetime)
-                .replace('$2', data.username)
-                .replace('$3', data.message);
-            chats.appendChild(tr);
-        };
+  socket.onopen = () => {
+    status.innerHTML = "Connected";
+    status.className = "connected";
+    chatApp.style.display = "block";
+    sendMessage({
+      type: "new_user",
+      username,
+    });
+  };
 
-        function handle_input(e) {
-            e.preventDefault();
-            var chat_input = document.getElementById('enter-chat');
-            send_message({
-                type: 'user_message',
-                message: chat_input.value
-             });
-            chat_input.value = '';
-        }
+  socket.onmessage = (response) => {
+    const tr = document.createElement("tr");
+    const message_received = response.data;
+    //const data = JSON.parse(response.data);
+    console.log(message_received);
+    // if (data.type === "notice") {
+    //   data.username = "*Server Message*";
+    // }
+    //tr.innerHTML = `<td>${data.datetime}</td><td>${data.username}</td><td>${data.message}</td>`;
+    tr.innerHTML = `${message_received}`;
+    chats.appendChild(tr);
+  };
 
-        var submit = document.getElementById('submit');
-        submit.addEventListener('click', handle_input);
-        var my_form = document.getElementById('my-form');
-        my_form.addEventListener('submit', handle_input);
-    }
+  function handleInput(e) {
+    e.preventDefault();
+    const chatInput = document.getElementById("enter-chat");
+    sendMessage({
+      type: "user_message",
+      message: chatInput.value,
+    });
+    chatInput.value = "";
+  }
 
-    function send_message(data){
-        socket.send(JSON.stringify(data));
-    }
+  const submit = document.getElementById("submit");
+  submit.addEventListener("click", handleInput);
+  const myForm = document.getElementById("my-form");
+  myForm.addEventListener("submit", handleInput);
+}
 
-    window.onload = function () {
-        var start_chat_form = document.getElementById('start-chat-form');
-        start_chat_form.addEventListener('submit', start_chatting);
-    };
-})(window, document);
+function sendMessage(data) {
+  socket.send(JSON.stringify(data));
+}
+
+window.onload = () => {
+  const startChatForm = document.getElementById("start-chat-form");
+  startChatForm.addEventListener("submit", startChatting);
+};
+
+// window.addEventListener("DOMContentLoaded", () => {
+//   const messages = document.createElement("ul");
+//   document.body.appendChild(messages);
+
+//   const websocket = new WebSocket("ws://127.0.0.1:8000");
+//   websocket.onmessage = ({ data }) => {
+//     const message = document.createElement("li");
+//     const content = document.createTextNode(data);
+//     message.appendChild(content);
+//     messages.appendChild(message);
+//   };
+// });
+
+// function startSocket() {
+//   var ws = new WebSocket("ws://127.0.0.1:8000");
+//   ws.onopen = function (event) {
+//     ws.send("Sent this from client.js");
+//   };
+// }
+// startSocket();

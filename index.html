@@ -1,38 +1,45 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-    <link href="styles.css" rel="stylesheet" type="text/css">
-    <script src="app.js"></script>
-</head>
-<body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
     <div id="wrapper">
-        <div id="chat-app">
-          <div id="form-container">
-            <form id="my-form">
-                <input type="text" id="enter-chat" />
-                <input type="submit" id="submit" value="Send"/>
-            </form>
-          </div>
-          <div id="chat-container">
-              <table>
-                  <tbody id="chats">
-                      <tr>
-                          <th>Date</th>
-                          <th>User</th>
-                          <th>Message</th>
-                      </tr>
-                  </tbody>
-              </table>
-          </div>
-        </div>
-        <div id="connect-form">
-          <form id="start-chat-form">
-            <input id="username" name="name" placeholder="Name" />
-            <input type="submit" value="Start Chatting"/>
+      <div id="chat-app">
+        <div id="form-container">
+          <form id="my-form">
+            <input
+              type="text"
+              id="enter-chat"
+              placeholder="Enter your message"
+            />
+            <button type="submit" id="submit">Send</button>
           </form>
         </div>
-        <p><span id="status"></span></p>
+        <div id="chat-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>User</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody id="chats"></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="connect-form">
+        <form id="start-chat-form">
+          <input type="text" id="username" name="name" placeholder="Name" />
+          <button type="submit">Start Chatting</button>
+        </form>
+      </div>
+      <p><span id="status"></span></p>
     </div>
-</body>
+  </body>
 </html>
